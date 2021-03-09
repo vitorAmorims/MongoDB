@@ -1,0 +1,35 @@
+MongoDB (Aula 7) - CRUD - Funções Create
+
+/*
+	inseri 1 ou mais documentos
+	db.collection.insert({ key: value})
+
+
+	inseri 1 documento
+	db.collection.insertOne({ key: value})
+
+
+	inserir mais de um documento
+	db.collection.insertMany([{key: value}, {key: value}])
+
+*/
+use nomedobancodedados;
+
+exemplo:
+
+use loja;
+
+db.lojas.insertOne({ cod: 1, endereco: 'Rua Fulano, 25'});
+
+db.lojas.insert([
+  {cod: 2, endereco: 'Rua apenas teste, 111'},
+  {cod: 3, endereco: 'Rua ja deu certo, 133'}
+]);
+
+db.lojas.insertMany([
+{cod: 4, endereco: 'Rua inserindo mais inserts, 222'},
+{cod: 5, endereco: 'Rua Gostando do mongodb, 444'},
+{cod: 6, endereco: 'Rua alencar o rei, 766'}
+])
+
+

@@ -1,0 +1,615 @@
+Exercícios aula 1 mongodb - introdução
+
+Agora, a prática!
+
+O MongoDb possui diversas ferramentas como, por exemplo, mongo , mongosh , Compass e outras ferramentas de terceiros. Você pode utilizar o que achar melhor para executar as queries , o importante é realizá-las.
+
+Utilizando a coleção bios , construa queries para retornar os seguintes itens:
+
+Exercício 1 : Retorne o documento com _id igual a 8.
+
+db.bios.find({'_id': 8}).pretty();
+{
+        "_id" : 8,
+        "name" : {
+                "first" : "Yukihiro",
+                "aka" : "Matz",
+                "last" : "Matsumoto"
+        },
+        "birth" : ISODate("1965-04-14T04:00:00Z"),
+        "contribs" : [
+                "Ruby"
+        ],
+        "awards" : [
+                {
+                        "award" : "Award for the Advancement of Free Software",
+                        "year" : "2011",
+                        "by" : "Free Software Foundation"
+                }
+        ]
+}
+
+Exercício 2 : Retorne o documento com _id igual a 8, mas só exiba os campos: _id e name .
+
+db.bios.findOne({"_id": 8}, {'name': 1});
+
+{
+        "_id" : 8,
+        "name" : {
+                "first" : "Yukihiro",
+                "aka" : "Matz",
+                "last" : "Matsumoto"
+        }
+}
+
+Exercício 3 : Retorne apenas os campos name e birth do documento com _id igual a 8.
+
+db.bios.find({'_id': 8}, {'name': 1,'birth': 1, _id: 0});
+
+{ "name" : { "first" : "Yukihiro", "aka" : "Matz", "last" : "Matsumoto" }, "birth" : ISODate("1965-04-14T04:00:00Z") }
+
+Exercício 4 : Retorne todos os documentos em que o campo name.first seja igual a John , utilizando o método pretty() .
+
+db.bios.find({'name.first': /John/}).pretty();
+
+
+{
+        "_id" : 1,
+        "name" : {
+                "first" : "John",
+                "last" : "Backus"
+        },
+        "birth" : ISODate("1924-12-03T05:00:00Z"),
+        "death" : ISODate("2007-03-17T04:00:00Z"),
+        "contribs" : [
+                "Fortran",
+                "ALGOL",
+                "Backus-Naur Form",
+                "FP"
+        ],
+        "awards" : [
+                {
+                        "award" : "W.W. McDowell Award",
+                        "year" : 1967,
+                        "by" : "IEEE Computer Society"
+                },
+                {
+                        "award" : "National Medal of Science",
+                        "year" : 1975,
+                        "by" : "National Science Foundation"
+                },
+                {
+                        "award" : "Turing Award",
+                        "year" : 1977,
+                        "by" : "ACM"
+                },
+                {
+                        "award" : "Draper Prize",
+                        "year" : 1993,
+                        "by" : "National Academy of Engineering"
+                }
+        ]
+}
+{
+        "_id" : ObjectId("51df07b094c6acd67e492f41"),
+        "name" : {
+                "first" : "John",
+                "last" : "McCarthy"
+        },
+        "birth" : ISODate("1927-09-04T04:00:00Z"),
+> db.bios.find({'name.first': /John/}).pretty();
+{
+        "_id" : 1,
+        "name" : {
+                "first" : "John",
+                "last" : "Backus"
+        },
+        "birth" : ISODate("1924-12-03T05:00:00Z"),
+        "death" : ISODate("2007-03-17T04:00:00Z"),
+        "contribs" : [
+                "Fortran",
+                "ALGOL",
+                "Backus-Naur Form",
+                "FP"
+        ],
+        "awards" : [
+                {
+                        "award" : "W.W. McDowell Award",
+                        "year" : 1967,
+                        "by" : "IEEE Computer Society"
+                },
+                {
+                        "award" : "National Medal of Science",
+                        "year" : 1975,
+                        "by" : "National Science Foundation"
+                },
+                {
+                        "award" : "Turing Award",
+                        "year" : 1977,
+                        "by" : "ACM"
+                },
+                {
+                        "award" : "Draper Prize",
+                        "year" : 1993,
+                        "by" : "National Academy of Engineering"
+                }
+        ]
+}
+{
+        "_id" : ObjectId("51df07b094c6acd67e492f41"),
+        "name" : {
+                "first" : "John",
+                "last" : "McCarthy"
+        },
+        "birth" : ISODate("1927-09-04T04:00:00Z"),
+        "death" : ISODate("2011-12-24T05:00:00Z"),
+        "contribs" : [
+                "Lisp",
+                "Artificial Intelligence",
+                "ALGOL"
+        ],
+        "awards" : [
+                {
+                        "award" : "Turing Award",
+                        "year" : 1971,
+                        "by" : "ACM"
+                },
+                {
+                        "award" : "Kyoto Prize",
+                        "year" : 1988,
+                        "by" : "Inamori Foundation"
+                },
+                {
+                        "award" : "National Medal of Science",
+                        "year" : 1990,
+                        "by" : "National Science Foundation"
+                }
+        ]
+}
+
+Exercício 5 : Retorne os 3 primeiros documentos da coleção bios utilizando o método pretty() .
+
+db.bios.find().limit(3).pretty();
+
+{
+        "_id" : 1,
+        "name" : {
+                "first" : "John",
+                "last" : "Backus"
+        },
+        "birth" : ISODate("1924-12-03T05:00:00Z"),
+        "death" : ISODate("2007-03-17T04:00:00Z"),
+        "contribs" : [
+                "Fortran",
+                "ALGOL",
+                "Backus-Naur Form",
+                "FP"
+        ],
+        "awards" : [
+                {
+                        "award" : "W.W. McDowell Award",
+                        "year" : 1967,
+                        "by" : "IEEE Computer Society"
+                },
+                {
+                        "award" : "National Medal of Science",
+                        "year" : 1975,
+                        "by" : "National Science Foundation"
+                },
+                {
+                        "award" : "Turing Award",
+                        "year" : 1977,
+                        "by" : "ACM"
+                },
+                {
+                        "award" : "Draper Prize",
+                        "year" : 1993,
+                        "by" : "National Academy of Engineering"
+                }
+        ]
+}
+{
+        "_id" : ObjectId("51df07b094c6acd67e492f41"),
+        "name" : {
+                "first" : "John",
+                "last" : "McCarthy"
+        },
+        "birth" : ISODate("1927-09-04T04:00:00Z"),
+        "death" : ISODate("2011-12-24T05:00:00Z"),
+        "contribs" : [
+                "Lisp",
+                "Artificial Intelligence",
+                "ALGOL"
+        ],
+        "awards" : [
+                {
+                        "award" : "Turing Award",
+                        "year" : 1971,
+                        "by" : "ACM"
+                },
+                {
+                        "award" : "Kyoto Prize",
+                        "year" : 1988,
+                        "by" : "Inamori Foundation"
+                },
+                {
+                        "award" : "National Medal of Science",
+                        "year" : 1990,
+                        "by" : "National Science Foundation"
+                }
+        ]
+}
+{
+        "_id" : 3,
+        "name" : {
+                "first" : "Grace",
+                "last" : "Hopper"
+        },
+        "title" : "Rear Admiral",
+        "birth" : ISODate("1906-12-09T05:00:00Z"),
+        "death" : ISODate("1992-01-01T05:00:00Z"),
+        "contribs" : [
+                "UNIVAC",
+                "compiler",
+                "FLOW-MATIC",
+                "COBOL"
+        ],
+        "awards" : [
+                {
+                        "award" : "Computer Sciences Man of the Year",
+                        "year" : 1969,
+                        "by" : "Data Processing Management Association"
+                },
+                {
+                        "award" : "Distinguished Fellow",
+                        "year" : 1973,
+                        "by" : " British Computer Society"
+                },
+                {
+                        "award" : "W. W. McDowell Award",
+                        "year" : 1976,
+                        "by" : "IEEE Computer Society"
+                },
+                {
+                        "award" : "National Medal of Technology",
+                        "year" : 1991,
+                        "by" : "United States"
+                }
+        ]
+}
+
+Exercício 6 : Retorne 2 documentos da coleção bios pulando os 5 primeiros documentos.
+
+db.bios.find().limit(2).skip(5);
+
+{ "_id" : 6, "name" : { "first" : "Guido", "last" : "van Rossum" }, "birth" : ISODate("1956-01-31T05:00:00Z"), "contribs" : [ "Python" ], "awards" : [ { "award" : "Award for the Advancement of Free Software", "year" : 2001, "by" : "Free Software Foundation" }, { "award" : "NLUUG Award", "year" : 2003, "by" : "NLUUG" } ] }
+{ "_id" : ObjectId("51e062189c6ae665454e301d"), "name" : { "first" : "Dennis", "last" : "Ritchie" }, "birth" : ISODate("1941-09-09T04:00:00Z"), "death" : ISODate("2011-10-12T04:00:00Z"), "contribs" : [ "UNIX", "C" ], "awards" : [ { "award" : "Turing Award", "year" : 1983, "by" : "ACM" }, { "award" : "National Medal of Technology", "year" : 1998, "by" : "United States" }, { "award" : "Japan Prize", "year" : 2011, "by" : "The Japan Prize Foundation" } ] }
+
+
+
+Utilizando o mongoimport , importe o arquivo books.json para a sua instância local do MongoDB e utilize a coleção books para construir queries para as seguintes questões:
+
+http://artedosdados.blogspot.com/2013/07/como-importar-arquivos-no-mongodb.html
+
+$ mongoimport --db dbBooks --collection books --file /home/vitor/Downloads/books.json
+
+2021-03-09T13:53:38.655-0300    connected to: mongodb://localhost/
+2021-03-09T13:53:38.987-0300    431 document(s) imported successfully. 0 document(s) failed to import.
+
+Exercício 7 : Retorne a quantidade de documentos da coleção books .
+
+db.books.count();
+431
+
+Exercício 8 : Conte quantos livros existem com o status "PUBLISH" .
+
+db.books.find({"status": 'PUBLISH'}).count();
+363
+
+ou 
+
+db.books.count(
+    { status: "PUBLISH" }
+)
+
+Exercício 9 : Exiba os campos title , isbn e pageCount dos 3 primeiros livros. NÃO retorne o campo _id .
+
+db.books.find(
+  {},
+  {
+    'title': 1,
+    'isbn': 1,
+    'pageCount': 1,
+    '_id': 0
+  }
+).limit(3);
+
+{ "title" : "Specification by Example", "isbn" : "1617290084", "pageCount" : 0 }
+{ "title" : "Unlocking Android", "isbn" : "1933988673", "pageCount" : 416 }
+{ "title" : "Collective Intelligence in Action", "isbn" : "1933988312", "pageCount" : 425 }
+
+Exercício 10: Pule 5 documentos e exiba os campos _id , title , authors e status do livros com status "MEAP" , limitando-se a 10 documentos.
+db.books.find(
+    {
+        status: "MEAP"
+    },
+    {
+        title: 1,
+        authors: 1,
+        status: 1
+    }
+).skip(5).limit(10).pretty()
+
+
+*********************
+criação e insert da collection bios
+db.bios.insertMany ([ 
+   { 
+       "_id": 1, 
+       "name": {
+           "first": "John",
+           "last": "Backus"
+       },
+       "birth": ISODate("1924-12-03T05:00:00Z"),
+       "death": ISODate("2007-03-17T04:00:00Z"),
+       "contribs": [
+           "Fortran",
+           "ALGOL",
+           "Backus-Naur Form",  
+           "award": "WW McDowell Award",
+           "year": 1967,
+           "by": "IEEE Computer Society" 
+    },
+           { 
+               "award"  :  "National Medal of Science" , 
+               "year"  :  1975 , 
+               "by"  :  " National Science Foundation " 
+           }, 
+           { 
+               " award "  :  " Turing Award " , 
+               " year "  :  1977 , 
+               " by "  :  " ACM " 
+           }, 
+           { 
+               " award "  : "Prêmio Draper" , 
+               "ano"  :  1993 ,
+               "by"  :  "National Academy of Engineering" 
+           } 
+       ] 
+   }, 
+   { 
+       "_id"  :  ObjectId ( "51df07b094c6acd67e492f41" ), 
+       "name"  :  { 
+           "first"  :  "John" , 
+           "last"  :  "McCarthy" 
+       }, 
+       "nascimento "  :  ISODate ( " 1927-09-04T04: 00: 00Z " ), 
+       " death "  :  ISODate ( " 2011-12-24T05: 00: 00Z " ), 
+       " contribs "  :  [ 
+           " Lisp " ,
+           "Inteligência Artificial" , 
+           "ALGOL" 
+       ],
+       "prêmios"  :  [ 
+           { 
+               "prêmio"  :  "Prêmio Turing" , 
+               "ano"  :  1971 , 
+               "por"  :  "ACM" 
+           }, 
+           { 
+               "prêmio"  :  "Prêmio Kyoto" , 
+               "ano"  :  1988 , 
+               "por"  :  "Inamori Foundation" 
+           }, 
+           { 
+               "award"  :  "National Medal of Science" , 
+               "ano"  :  1990 , 
+               "por"  :  "National Science Foundation"
+           } 
+       ] 
+   }, 
+   { 
+       "_id"  :  3 ,
+       "nome"  :  { 
+           "primeiro"  :  "Graça" , 
+           "último"  :  "Hopper" 
+       }, 
+       "título"  :  "Contra-almirante" , 
+       "nascimento"  :  ISODate ( "1906-12-09T05: 00: 00Z" ), 
+       "death"  :  ISODate ( "1992-01-01T05: 00: 00Z" ), 
+       "contribs"  :  [ 
+           "UNIVAC" , 
+           "compilador" , 
+           "FLOW-MATIC" , 
+           "COBOL" 
+       ], 
+       "prêmios"  : [ 
+           { 
+               "prêmio"  :  "Homem do Ano em Ciências da Computação" ,
+               "year"  :  1969 , 
+               "by"  :  "Data Processing Management Association" 
+           }, 
+           { 
+               "award"  :  "Distinguished Fellow" , 
+               "year"  :  1973 , 
+               "by"  :  "British Computer Society" 
+           }, 
+           { 
+               "award"  :  "WW McDowell Award" , 
+               "year"  :  1976 , 
+               "by"  :  "IEEE Computer Society" 
+           }, 
+           { 
+               "award"  :  "National Medal of Technology" ,
+               "ano"  :  1991 , 
+               "por"  : "United States" 
+           } 
+       ] 
+   }, 
+   { 
+       "_id"  :  4 , 
+       "name"  :  { 
+           "first"  :  "Kristen" , 
+           "last"  :  "Nygaard" 
+       }, 
+       "birth"  :  ISODate ( "1926-08-27T04: 00: 00Z " ), 
+       " morte "  :  ISODate ( " 2002-08-10T04: 00: 00Z " ), 
+       " contribs "  :  [ 
+           " OOP " , 
+           " Simula " 
+       ], 
+       " prêmios "  : [ 
+           { 
+               "prêmio"  :  "Prêmio Rosing" , 
+               "ano"  : 1999 , 
+               "por"  :  "Norwegian Data Association" 
+           }, 
+           { 
+               "award"  :  "Turing Award" , 
+               "year"  :  2001 , 
+               "by"  :  "ACM" 
+           }, 
+           { 
+               "award"  :  "IEEE John von Neumann Medal" , 
+               "ano"  :  2001 , 
+               "por"  :  "IEEE" 
+           } 
+       ] 
+   }, 
+   { 
+       "_id"  :  5 , 
+       "nome"  :  { 
+           "primeiro"  : "Ole-Johan" , 
+           "último"  :  "Dahl" 
+       },
+       "nascimento"  :  ISODate ( "1931-10-12T04: 00: 00Z" ), 
+       "morte"  :  ISODate ( "2002-06-29T04: 00: 00Z" ), 
+       "contribs"  :  [ 
+           "OOP" , 
+           "Simula" 
+       ], 
+       "awards"  :  [ 
+           { 
+               "award"  :  "Rosing Prize" , 
+               "year"  :  1999 , 
+               "by"  :  "Norwegian Data Association" 
+           }, 
+           { 
+               "award"  :  "Turing Award" , 
+               "year" :  2001 , 
+               "por"  :  "ACM"
+           }, 
+           { 
+               "prêmio"  :  "IEEE John von Neumann Medal" , 
+               "ano"  :  2001 , 
+               "por"  :  "IEEE" 
+           } 
+       ] 
+   }, 
+   { 
+       "_id"  :  6 , 
+       "nome"  :  { 
+           "primeiro"  :  "Guido " , 
+           " último "  :  " van Rossum " 
+       }, 
+       " nascimento "  :  ISODate ( " 1956-01-31T05: 00: 00Z " ), 
+       " contribs "  :  [ 
+           " Python " 
+       ], 
+       "prêmios "  :  [ 
+           { 
+               " prêmio "  : "Prêmio pelo Avanço do Software Livre" , 
+               "ano"  :  2001 , 
+               "por"  :  "Fundação do Software Livre" 
+           }, 
+           { 
+               "prêmio"  :  "Prêmio NLUUG" , 
+               "ano"  :  2003 , 
+               "por"  :  "NLUUG" 
+           } 
+       ] 
+   }, 
+   { 
+       "_id"  :  ObjectId ( "51e062189c6ae665454e301d" ), 
+       "name"  :  { 
+           "first"  :  "Dennis" , 
+           "last"  : "Ritchie" 
+       }, 
+       "nascimento"  :  ISODate ("1941-09-09T04: 00: 00Z" ), 
+       "morte"  :  ISODate ( "2011-10-12T04: 00: 00Z" ), 
+       "contribs"  :  [ 
+           "UNIX" , 
+           "C" 
+       ], 
+       "prêmios"  :  [ 
+           { 
+               "prêmio"  :  "Prêmio Turing" , 
+               "ano"  :  1983 , 
+               "por"  :  "ACM" 
+           }, 
+           { 
+               "prêmio"  :  "Medalha Nacional de Tecnologia" , 
+               "ano"  :  1998 , 
+               "por"  : "Estados Unidos" 
+           }, 
+           { 
+               "prêmio"  : "Japan Prize" , 
+               "year"  :  2011 , 
+               "by"  :  "The Japan Prize Foundation" 
+           } 
+       ] 
+   }, 
+   { 
+       "_id"  :  8 , 
+       "name"  :  { 
+           "first"  :  "Yukihiro" , 
+           "aka"  :  " Matz " , 
+           " último "  :  " Matsumoto " 
+       }, 
+       " nascimento "  :  ISODate ( " 1965-04-14T04: 00: 00Z " ), 
+       " contribs "  :  [ 
+           " Ruby " 
+       ],
+       "prêmios"  :  [ 
+           { 
+               "prêmio"  : "Prêmio pelo Avanço do Software Livre" , 
+               "ano"  :  "2011" , 
+               "por"  :  "Fundação do Software Livre" 
+           } 
+       ] 
+   }, 
+   { 
+       "_id"  :  9 , 
+       "nome"  :  { 
+           "primeiro"  :  "James" , 
+           "último"  :  "Gosling" 
+       }, 
+       "nascimento"  :  ISODate ( "1955-05-19T04: 00: 00Z" ), 
+       "contribs"  :  [ 
+           "Java" 
+       ], 
+       "prêmios"  : [ 
+           { 
+               "prêmio"  :  "The Economist Innovation Award", 
+               "ano"  :  2002 , 
+               "por"  :  "The Economist" 
+           }, 
+           { 
+               "prêmio"  :  "Oficial da Ordem do Canadá" , 
+               "ano"  :  2007 , 
+               "por"  :  "Canadá" 
+           } 
+       ] 
+   }, 
+   { 
+       " _id "  :  10 , 
+       " name "  :  { 
+           " first "  :  " Martin " , 
+           " last "  :  " Odersky " 
+       }, 
+       " contribs "  :  [ 
+           " Scala "
+       ] 
+   }
+
+]  )

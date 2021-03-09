@@ -1,0 +1,171 @@
+curso mongodb
+
+mongodb x sql
+
+mongo db 
+
+noSQL
+
+https://medium.com/@neto.acs/crud-em-mongodb-inserindo-dados-eeaa12b57154
+
+para iniciar use o comando: mongo
+
+Inserindo dados no MongoDB
+
+A inserção de dados em mongodb pode ocorrer de várias formas. Iniciamos com o método mais conhecido: db.collection.insert()
+
+A sintaxe geral deste método é a seguinte:
+
+db.collection.insert(
+   <documento ou array de documentos>,
+   {
+     writeConcern: <documento>,
+     ordered: <boolean>
+   }
+)
+
+Note que ao invés do tradicional INSERT INTO tabela VALUES ('A', 'B', 'C'); presente na linguagem SQL, a inserção de dados se assemelha a chamadas de função em JavaScript — linguagem essa presente de forma nativa através do cliente padrão, o mongo.
+
+Como primeiro argumento desse método, temos próprio documento a ser inserido. Caso quiséssemos inserir um novo usuário na collection usuários, bastaria executar o comando a seguir:
+
+> db.usuarios.insert({
+    usuario: "João das Neves",
+    habilidades: ["Lutar", "Liderar", "Ressuscitar"],        
+    hobbies: ["passear na caverna", "velejar"],
+    alianças: ["Stark", "Targaryen", "Patrulha da Noite"] 
+})
+
+Mas nós criamos a collection usuarios? Não. Mas para o MongoDB, isso não importa. Caso seu usuário possua as credenciais necessárias, você pode mencionar collections e até mesmo databases inexistentes, e o banco de dados se encarrega de criá-los automaticamente. Isso só é possível graças a flexibilidade de collections ao não pré-determinar a estrutura dos dados antes de inseri-los.
+
+ObjectIDs
+
+Execute o comando a seguir através do mongo:
+
+> db.usuarios.find().pretty()
+{
+  "_id" : ObjectId("5bce15b6bc525d895d4afbcc"),
+  "usuario" : "João das Neves",
+  "habilidades" : [
+  "Lutar",
+  "Liderar",
+  "Ressuscitar"
+  ],
+  "hobbies" : [
+    "passear na caverna",
+    "velejar"
+  ],
+  "alianças" : [
+    "Stark",
+    "Targaryen",
+    "Patrulha da Noite"
+  ]
+}
+
+Note que o resultado exibe exatamente os dados inseridos, exceto pela chave _id. Acontece que esta chave é inserida automaticamente a cada inserção de documento, com funcionamento parecido com o AUTO_INCREMENT presente em bancos de dados relacionais como MySQL e SERIAL em PostgreSQL. Essa chave serve como identificador único de um documento em uma collection, e seu valor é composto por 12 Bytes:
+
+4 bytes representam segundos desde a Era Unix,
+5 bytes atribuídos de forma aleatória,
+3 bytes para um contador, com ínicio também atribuído de forma aleatória
+
+A chave _id pode ser atribuída de forma manual, mas na maioria dos casos, não há por que fazê-lo. Além disso, a estrutura dos ObjectIDs é necessária ao implementar sharding no MongoDB, para que não existam dois documentos com a mesma chave primária.
+
+Inserindo múltiplos documentos
+
+O método db.collection.insert() é capaz de aceitar múltiplos documentos, passados através de um vetor:
+
+db.usuarios.insert([{
+    usuario: "Dani Targaryen",
+    habilidades: ["Incendiar cidades", "Queimar inimigos", "Quebrar correntes"],            
+    hobbies: ["Queimar inimigos", "velejar"],
+    alianças: null,
+    titulo: "Primeira de seu nome, Nascida da tormenta, A não queimada, Mãe dos Dragões, Quebradora das correntes, Mãe dos escravos , Khaleesi dos Dothraki, Rainha de Mereen, Rainha de Westeros, Dos Ândalos, Dos Roinares"
+},
+{
+    usuario: "Cersei Lannister",
+    habilidades: ["Incendiar cidades", "Queimar inimigos", "Forjar alianças"],
+    hobbies: ["Queimar inimigos", "Cuidar dos filhos"],
+    alianças: ["Greyjoy"],
+    título: "Rainha dos Reinos"
+},
+{
+    usuario: "Sansa Stark",
+    habilidades: null,
+    hobbies: ["Comer bolinhos de limão", "Passear no bosque",  "Rezar"],
+    corDeCabelo: "ruivo"
+}]);
+
+Por padrão, a inserção desses documentos se dá de forma ordenada. Isso faz com que, caso exista um erro na inserção de um documento, o cliente retorna um erro, sem processar os docuementos restantes no vetor.
+
+Os documentos não precisam ter o mesmo número de chaves: Sansa Stark possui o atributo cor de cabelo, e Dani Targaryen possui a chave título, assim como Cersei Stark. Sansa não possui alianças.
+
+É possivel inserir documentos de forma não ordenada. Para tal, um documento deve ser passado como segundo parâmetro no método db.collection.insert() , contendo a seguinte chave e valor: {ordered: false}:
+
+db.usuarios.insert([
+    {_id: 100, usuario: "Brandon Stark", idade: 16},
+    {_id: 100, usuario: "Tyrion Lannister", estatura: 135, hobbies: ["Vinho", "Ler", "Visitar bordéis"]},
+    {usuario: "Catelyn Stark", status: "Assassinada"},
+],                                                                                                                                                                                            
+    {ordered: False}
+);
+
+Escritas não ordenadas permitem que, mesmo que alguns documentos não consigam ser inseridos, a inserção de dados não é interrompida. Todos os documentos válidos presentes no vetor são inserido. No exemplo, o usuário Tyrion Lannister não é inserido por conter o mesmo ObjectID do usuário Brandon Stark. Catelyn Stark, no entanto, é adicionada à collection.
+
+Write Concern
+
+O terceiro argumento passado para o método db.collection.insert() se refere ao WriteConcern.
+
+O objeto passado como argumento possui duas chaves: w e j. 
+A opção w define a necessidade de um cliente em garantir a escrita de dados em um, nenhum, ou mais de um servidor mongodb. Para entender de fato o funcionamento dessa opção, é necessário entender um pouco sobre Replica Sets. Mas de forma resumida, a opção {w: 1} (padrão no mongodb) exige que a informação seja escrita em uma instância do mongodb para retornar um código de sucesso ao cliente inserindo o dado. A opção {w: 0} exibe o código de sucesso sem a garantia da persistência de dados. Já a opção {w: "Majority"} faz com que os dados sejam inseridos em na maioria dos membros de um Replica Set (conjunto de servidores mongodb com intuito de replicar dados e fornecer alta-disponibilidade).
+Já a opção j define a necessidade de um cliente em garantir a escrita de dados em disco. Isso mesmo, caso você não especifique opção j, os dados escritos permanecem em memória RAM, até que eventualmente o mongoDB grave os dados em seu log de transação, chamado oplog. Para garantir a persistência dos dados de forma persistente, passe como argumento o opção {j: True} a cada operação de escrita.
+
+Além do método db.collection.insert() ,
+temos também os métodos: db.collection.insertOne() e db.collection.insertMany() .
+
+O primeiro é utilizado para inserção de apenas um documento, e ao invés de retornar um objeto WriteResult, o resultado é um objeto contendo o status de sucesso da operação, assim como o ObjectID gerado na inserção:
+
+> db.usuarios.insertOne({usuario: "Jaime Lannister", corDeCabelo: "Loiro"})
+{
+ "acknowledged" : true,
+ "insertedId" : ObjectId("5bce3154bc525d895d4afbd4")
+}
+
+Já o método db.collection.insertMany() insere mais de um documento, e retorna como resposta ao cliente um documento conténdo os ObjectIDs gerados na inserção de cada documento:
+> db.usuarios.insertMany([
+    {usuario: "Robert Baratheon", status: "Morto por um javali"},
+    {usuario: "Renly Baratheon", status: "Morto por um vulto"},
+    {usuario: "Stannis Baratheon", status: "Morto em guerra por Brienne de Tarth"}
+])
+{
+   "acknowledged" : true,
+   "insertedIds" : [
+      ObjectId("5bce3272bc525d895d4afbd5"),
+      ObjectId("5bce3272bc525d895d4afbd6"),
+      ObjectId("5bce3272bc525d895d4afbd7")
+ ]
+}
+
+
+exercícios
+
+************************************
+criando collections users e inserindo 
+
+db.users.insert(
+  {id: 1, name: "Vitor", age: 38}
+);
+
+
+**********************************
+> db.users.find();
+{ "_id" : ObjectId("604655042808b987391691b5"), "id" : 1, "name" : "Vitor", "age" : 38 }
+
+ou 
+
+> db.users.find().pretty();
+{
+	"_id" : ObjectId("604655042808b987391691b5"),
+	"id" : 1,
+	"name" : "Vitor",
+	"age" : 38
+}
+

@@ -1,0 +1,45 @@
+Comandos de informações das bases de dados
+
+--entrar no banco de dados ou criar banco de dados
+use nomedobanco
+
+-- mostra informações das bases disponíveis
+show dbs;
+ou
+show databases;
+
+-- mostra informações sobre as coleções
+show collections; 
+
+--qual base estou usando 
+> db.stats();
+{
+	"db" : "teste",
+	"collections" : 1,
+	"views" : 0,
+	"objects" : 1,
+	"avgObjSize" : 63,
+	"dataSize" : 63,
+	"storageSize" : 20480,
+	"indexes" : 1,
+	"indexSize" : 20480,
+	"totalSize" : 40960,
+	"scaleFactor" : 1,
+	"fsUsedSize" : 32769925120,
+	"fsTotalSize" : 114112688128,
+	"ok" : 1
+}
+
+--a descrição do documento
+> db.users.stats();
+{
+	"ns" : "teste.users",
+	"size" : 63,
+	"count" : 1,
+	"avgObjSize" : 63,
+	"storageSize" : 20480,
+	"freeStorageSize" : 0,
+	"capped" : false,
+	"wiredTiger" : {
+
+

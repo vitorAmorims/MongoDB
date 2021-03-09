@@ -1,0 +1,134 @@
+https://www.tutorialspoint.com/mongodb/mongodb_query_document.htm
+
+operador AND
+
+https://www.tutorialspoint.com/mongodb/mongodb_query_document.htm
+
+
+exemplo: operador AND
+Exiba o titulo, que contenham a palavra MongoDB e os likes sejam acima ou igual a 50.
+
+db.mycol.find({$and: [{'title': /MongoDB/}, {'likes': {$gte:50}}]});
+
+OR no MongoDB
+
+Sintaxe
+
+Para consultar documentos com base na condição OR, você precisa usar $ ou palavra-chave. A seguir está a sintaxe básica de OR -
+
+>db.mycol.find(
+   {
+      $or: [
+         {key1: value1}, {key2:value2}
+      ]
+   }
+).pretty()
+
+Exemplo
+O exemplo a seguir mostrará todos os tutoriais escritos por 'tutorials point' ou cujo título é 'Visão geral do MongoDB'.
+
+>db.mycol.find({$or:[{"by":"tutorials point"},{"title": "MongoDB Overview"}]}).pretty()
+{
+   "_id": ObjectId(7df78ad8902c),
+   "title": "MongoDB Overview", 
+   "description": "MongoDB is no sql database",
+   "by": "tutorials point",
+   "url": "http://www.tutorialspoint.com",
+   "tags": ["mongodb", "database", "NoSQL"],
+   "likes": "100"
+}
+
+Usando AND e OR juntos
+
+Exemplo
+
+O exemplo a seguir mostrará os documentos que têm curtidas maiores que 10 e cujo título é 'Visão geral do MongoDB' ou 'ponto de tutorial'. SQL equivalente onde a cláusula é 'where likes> 10 AND (by =' tutorials point 'OR title =' MongoDB Overview ')'
+
+>db.mycol.find({"likes": {$gt:10}, $or: [{"by": "tutorials point"},
+   {"title": "MongoDB Overview"}]}).pretty()
+   
+{
+   "_id": ObjectId(7df78ad8902c),
+   "title": "MongoDB Overview", 
+   "description": "MongoDB is no sql database",
+   "by": "tutorials point",
+   "url": "http://www.tutorialspoint.com",
+   "tags": ["mongodb", "database", "NoSQL"],
+   "likes": "100"
+}
+
+
+NOR no MongoDB
+
+Sintaxe
+
+Para consultar documentos com base na condição NOT, você precisa usar a palavra-chave $ not. A seguir está a sintaxe básica de NOT -
+
+db.COLLECTION_NAME.find(
+	{
+		$not: [
+			{key1: value1}, {key2:value2}
+		]
+	}
+)
+
+Exemplo
+Suponha que inserimos 3 documentos na coleção empDetails como mostrado abaixo -
+
+db.empDetails.insertMany(
+	[
+		{
+			First_Name: "Radhika",
+			Last_Name: "Sharma",
+			Age: "26",
+			e_mail: "radhika_sharma.123@gmail.com",
+			phone: "9000012345"
+		},
+		{
+			First_Name: "Rachel",
+			Last_Name: "Christopher",
+			Age: "27",
+			e_mail: "Rachel_Christopher.123@gmail.com",
+			phone: "9000054321"
+		},
+		{
+			First_Name: "Fathima",
+			Last_Name: "Sheik",
+			Age: "24",
+			e_mail: "Fathima_Sheik.123@gmail.com",
+			phone: "9000054321"
+		}
+	]
+)
+
+O exemplo a seguir irá recuperar o (s) documento (s) cujo nome não é "Radhika"
+
+db.empDetails.find(
+{$nor: [{"First_Name": "Radhika"}]}
+).pretty();
+
+NÃO no MongoDB
+
+Sintaxe
+
+Para consultar documentos com base na condição NOT, você precisa usar a palavra-chave $ not após a sintaxe básica de NOT -
+
+>db.COLLECTION_NAME.find(
+	{
+		$NOT: [
+			{key1: value1}, {key2:value2}
+		]
+	}
+).pretty()
+
+Exemplo
+
+O exemplo a seguir recuperará o (s) documento (s) cuja idade não seja maior que 25
+
+db.empDetails.find(
+  {"Age": { $not: { $gt: "25" } } }
+);
+
+
+
+

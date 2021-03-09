@@ -1,0 +1,52 @@
+Comparison Query Operators
+
+mongodb query-selectors
+
+db.produtos.insertMany([
+{ _id: 1, item: { name: "ab", code: "123" }, qty: 15, tags: [ "A", "B", "C" ] },
+{ _id: 2, item: { name: "cd", code: "123" }, qty: 20, tags: [ "B" ] },
+{ _id: 3, item: { name: "ij", code: "456" }, qty: 25, tags: [ "A", "B" ] },
+{ _id: 4, item: { name: "xy", code: "456" }, qty: 30, tags: [ "B", "A" ] },
+{ _id: 5, item: { name: "mn", code: "000" }, qty: 20, tags: [ [ "A", "B" ], "C" ] }
+]);
+
+operador $eq igualdade
+db.produtos.find({ qty: { $eq: 20}});
+ou
+db.produtos.find({ qty: 20});
+
+resultado
+
+{ "_id" : 2, "item" : { "name" : "cd", "code" : "123" }, "qty" : 20, "tags" : [ "B" ] }
+{ "_id" : 5, "item" : { "name" : "mn", "code" : "000" }, "qty" : 20, "tags" : [ [ "A", "B" ], "C" ] }
+
+o campo no documento incorporado é igual a um valor
+
+db.produtos.find({"item.name": {$eq: "ij"}});
+ou
+db.produtos.find({"item.name": "xy"});
+
+Elemento Array é igual a um valor 
+
+db.produtos.find({tags: "B"});
+
+É igual a um valor de matriz
+
+db.produtos.find({tags: {$eq: ["A", "B"]}});
+
+Comportamento de correspondência Regex 
+
+Os exemplos a seguir demonstram as diferenças de comportamento entre a correspondência de expressão regular implícita e explícita. Considere uma coleção com estes documentos:
+
+db.empresas.insertMany([
+{id: 003, 'empresa': 'MongoDB3'},
+{id: 004, 'empresa': 'MongoDB4'}
+]);
+
+db.empresas.find({empresa :  {$eq:  "MongoDB4"}},  {id: 4});
+
+eq corresponde a uma expressão regular
+
+Uma consulta explícita usando $eqe uma expressão regular só corresponderá a um objeto que também seja uma expressão regular. A consulta de exemplo não retornará nada, pois os valores no companycampo são strings.
+
+db.empresas.find({empresa: {$regex: /MongoDB/}});

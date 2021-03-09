@@ -1,0 +1,34 @@
+MongoDB (Aula 8) - CRUD: Funções Update
+
+db.collection.update(query, update, options)
+
+alterar ou substituir um documento
+db.collection.update()
+
+alterar um documento
+db.collection.updateOne()
+
+alterar vários documentos
+db.collection.updateMany()
+
+
+exemplo:
+db.lojas.update(
+ {"cod":2}, {$set: {"endereco": "Rua funcionou update, 111"}}
+);
+
+ou
+
+db.lojas.updateOne(
+ {"cod":2}, {$set: {"endereco": "Rua funcionou updateOne com , 111"}}
+);
+
+exemplo:
+
+inserção de mais uma loja com id=2, para usar o updateMany
+
+db.lojas.insert(
+{cod: 2, endereço: 'Vamos testar o updateMany, 111'}
+);
+
+db.lojas.updateMany({'cod':2}, {$set: {'endereco': 'Rua atualizando com updateMany as duas lojas, 1000'}});
